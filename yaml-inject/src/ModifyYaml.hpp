@@ -1,7 +1,7 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
-class ModifyYaml{
+class ModifyYaml {
 public:
     ModifyYaml(std::string file);
     ~ModifyYaml();
@@ -9,5 +9,5 @@ public:
 
 private:
     std::string filename;
-    YAML::Node yamlFile;
+    YAML::Node *yamlFile;
 };

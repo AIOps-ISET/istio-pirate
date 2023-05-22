@@ -8,8 +8,8 @@ using std::cout;
 using std::endl;
 
 ModifyYaml::ModifyYaml(std::string file) {
-    this->filename = file;
-    this->yamlFile = YAML::LoadFile(file);
+    this->filename    = file;
+    *(this->yamlFile) = YAML::LoadFile(file);
 };
 
 ModifyYaml::~ModifyYaml() {
@@ -22,10 +22,11 @@ ModifyYaml::~ModifyYaml() {
 void ModifyYaml::insert_init_container() {
     cout << "Modifying config file..." << endl;
 
-    size_t containers_size = this->yamlFile["containers"].size();
+    size_t containers_size = (*this->yamlFile)["containers"].size();
     bool   find_same       = false;
     for (int i = 0; i < containers_size; i++) {
-        const std::string name = yamlFile["containers"][i]["image"].as<std::string>();
+        const std::string name =
+            (*this->yamlFile)["containers"][i]["image"].as<std::string>();
         if (name == "init-container-name") {
             find_same = true;
             break;
@@ -38,7 +39,7 @@ void ModifyYaml::insert_init_container() {
         node["args"].push_back("arg1");
         node["args"].push_back("arg2");
         node["args"].push_back("arg3");
-        this->yamlFile["containers"].push_back(node);
+        (*this->yamlFile)["containers"].push_back(node);
     } else {
         cout << "find same!" << endl;
     }
