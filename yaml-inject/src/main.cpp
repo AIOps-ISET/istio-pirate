@@ -1,7 +1,10 @@
 #include "ModifyYaml.hpp"
 
 int main() {
-    ModifyYaml m("config.yaml");
-    m.insert_init_container();
+    ModifyYaml m("pod.yaml");
+    m.insertInitContainer();
+    m.insertEnvoyContainer();
+    m.writeToFile("modified-pod.yaml");
+
     return 0;
 }

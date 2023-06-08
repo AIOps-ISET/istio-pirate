@@ -3,7 +3,7 @@ Language: Cpp
 BasedOnStyle: LLVM
 
 #函数参数换行
-ColumnLimit: 80
+ColumnLimit: 120
 BinPackArguments: false
 BinPackParameters: false
 AllowAllParametersOfDeclarationOnNextLine: false
