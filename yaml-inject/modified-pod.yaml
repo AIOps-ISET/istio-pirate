@@ -6,7 +6,7 @@ metadata:
     app: hello
 spec:
   containers:
-    - name: hello
+    - name: hello1
       image: local/hello:alpine
       resources:
         limits:
@@ -14,7 +14,7 @@ spec:
           cpu: "500m"
       ports:
         - containerPort: 3000
-    - name: hello
+    - name: hello2
       image: local/hello:alpine
       resources:
         limits:

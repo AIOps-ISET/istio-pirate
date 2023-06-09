@@ -32,7 +32,6 @@ void ModifyYaml::insertInitContainer() {
     }
     portsString.erase(portsString.end() - 1, portsString.end());
 
-    YAML::Node initContainersNode;
     YAML::Node initContainerNode;
     initContainerNode["image"] = "local/init:latest";
     initContainerNode["name"]  = "init-container";
@@ -40,8 +39,7 @@ void ModifyYaml::insertInitContainer() {
     envMap["name"]  = "APP_PORT";
     envMap["value"] = portsString;
     initContainerNode["env"].push_back(envMap);
-    initContainersNode.push_back(initContainerNode);
-    (*containersFatherNode)["initContainers"] = initContainersNode;
+    (*containersFatherNode)["initContainers"].push_back(initContainerNode);
 
 #ifdef DEBUG
     cout << "Insert init container finished!" << endl;
@@ -59,7 +57,6 @@ void ModifyYaml::insertEnvoyContainer() {
     envoyNode["ports"]                 = envoyPortsNode;
     (*containersFatherNode)["containers"].push_back(envoyNode);
 }
-
 
 void ModifyYaml::writeToFile(std::string const &newFileName) {
 #ifdef DEBUG
