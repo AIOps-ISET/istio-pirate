@@ -7,11 +7,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
     add_definitions(-DDEBUG)
 endif ()
 
-add_executable(admission_controller)
-add_executable(pilot-app)
-
-add_subdirectory(yaml-inject)
-add_subdirectory(libs/yaml-cpp)
+add_executable(pilot_app)
 add_subdirectory(pilot)
-
-target_link_libraries(admission_controller PRIVATE yaml-cpp)
+find_package(kubernetes CONFIG REQUIRED COMPONENTS kubernetes)
+target_link_libraries(pilot_app PRIVATE kubernetes::kubernetes)

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: pilot-namespace
+  name: pilot-test
+  labels:
+    app: pilot-test
+spec:
+  containers:
+    - name: pilot-test
+      image: local/pilot:latest
+      imagePullPolicy: Never
+  serviceAccountName: pilot-account

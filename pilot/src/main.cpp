@@ -1,38 +1,43 @@
+extern "C" {
 #include <kubernetes/api/CoreV1API.h>
+#include <kubernetes/config/incluster_config.h>
 #include <kubernetes/config/kube_config.h>
+}
+#include <iostream>
 #include <string>
+
+using std::cout, std::endl;
 
 void list_pod(apiClient_t *apiClient) {
     v1_pod_list_t *pod_list;
-    char          *s        = nullptr;
-    strcpy(s, "default");
+    std::string    s = "default";
 
     pod_list = CoreV1API_listNamespacedPod(apiClient,
-                                           s,       /*namespace */
-                                           nullptr, /* pretty */
-                                           0,       /* allowWatchBookmarks */
-                                           nullptr, /* continue */
-                                           nullptr, /* fieldSelector */
-                                           nullptr, /* labelSelector */
-                                           0,       /* limit */
-                                           nullptr, /* resourceVersion */
-                                           nullptr, /* resourceVersionMatch */
-                                           0,       /* sendInitialEvents */
-                                           0,       /* timeoutSeconds */
-                                           0        /* watch */
+                                           s.data(), /*namespace */
+                                           nullptr,  /* pretty */
+                                           0,        /* allowWatchBookmarks */
+                                           nullptr,  /* continue */
+                                           nullptr,  /* fieldSelector */
+                                           nullptr,  /* labelSelector */
+                                           0,        /* limit */
+                                           nullptr,  /* resourceVersion */
+                                           nullptr,  /* resourceVersionMatch */
+                                           0,        /* sendInitialEvents */
+                                           0,        /* timeoutSeconds */
+                                           0         /* watch */
     );
-    printf("The return code of HTTP request=%ld\n", apiClient->response_code);
+    cout << "The return code of HTTP request=%ld\n" << apiClient->response_code << endl;
     if (pod_list) {
-        printf("Get pod list:\n");
+        cout << "Get pod list:" << endl;
         listEntry_t *listEntry;
         v1_pod_t    *pod;
         list_ForEach(listEntry, pod_list->items) {
             pod = (v1_pod_t *)listEntry->data;
-            printf("\tThe pod name: %s\n", pod->metadata->name);
+            cout << "\tThe pod name: " << pod->metadata->name << endl;
         }
         v1_pod_list_free(pod_list);
     } else {
-        printf("Cannot get any pod.\n");
+        cout << "Cannot get any pod." << endl;
     }
 }
 
@@ -40,17 +45,14 @@ int main() {
     char        *basePath  = nullptr;
     sslConfig_t *sslConfig = nullptr;
     list_t      *apiKeys   = nullptr;
-    int          rc        = load_kube_config(&basePath,
-                              &sslConfig,
-                              &apiKeys,
-                              nullptr); /* NULL means loading configuration from $HOME/.kube/config */
-    if (rc != 0) {
-        printf("Cannot load kubernetes configuration.\n");
+    int          result    = load_incluster_config(&basePath, &sslConfig, &apiKeys);
+    if (result != 0) {
+        cout << "Cannot load kubernetes configuration." << endl;
         return -1;
     }
     apiClient_t *apiClient = apiClient_create_with_base_path(basePath, sslConfig, apiKeys);
     if (!apiClient) {
-        printf("Cannot create a kubernetes client.\n");
+        cout << "Cannot create a kubernetes client." << endl;
         return -1;
     }
 

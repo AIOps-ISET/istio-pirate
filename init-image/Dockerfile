@@ -2,7 +2,7 @@ FROM debian:bullseye-slim as debian-base
 RUN apt update
 RUN apt install -y iptables
 
-FROM alpine:latest as alpine-base
+FROM alpine:3.18.0 as alpine-base
 RUN apk add iptables
 
 FROM locale/iptables:alpine as init-alpine
