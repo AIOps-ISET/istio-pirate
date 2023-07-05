@@ -1,15 +1,21 @@
-build-pilot-image:
-	cd ./docker-build && docker build -t local/pilot:latest .
+build-pilot-dev-base:
+	cd ./docker-build && docker build --target pilot-dev-base -t local/pilot-dev-base:latest .
 
-copy-so:
-	cp  /usr/local/lib/libyaml.so ./docker-build
-	cp /usr/local/lib/libwebsockets.so.18 ./docker-build
-	cp /usr/local/lib/libkubernetes.so ./docker-build
-	cp /lib/x86_64-linux-gnu/libcrypto.so.1.1 ./docker-build
-	cp /lib/x86_64-linux-gnu/libssl.so.1.1 ./docker-build
+build-pilot-runtime-base:
+	cd ./docker-build && docker build --target pilot-runtime-base -t local/pilot-runtime-base:latest .
 
-copy-app:
-	cp ../cmake-build-debug-/pilot-app ./docker-build
+build-pilot: copy-sources
+	cd ./docker-build && docker build --target build-pilot -t local/build-pilot:latest .
+
+build-pilot-only-image: copy-sources
+	cd ./docker-build && docker build --target pilot -t local/pilot:latest .
+
+copy-sources:
+	rm -r ./docker-build/istio-pirate
+	mkdir -p ./docker-build/istio-pirate/pilot/src
+	cp -r ./src ./docker-build/istio-pirate/pilot/
+	cp CMakeLists.txt ./docker-build/istio-pirate/pilot/
+	cp ../CMakeLists.txt ./docker-build/istio-pirate
 
 create-pilot-pod:
-	cd ./docker-build && kubectl create -f pilot-test.yaml
+	cd ./k8s-resources && kubectl create -f pilot-test.yaml

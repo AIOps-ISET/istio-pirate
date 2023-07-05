@@ -10,23 +10,23 @@ using std::cout, std::endl;
 
 void list_pod(apiClient_t *apiClient) {
     v1_pod_list_t *pod_list;
-    std::string    s = "default";
+    std::string    query_namespace = "default";
 
     pod_list = CoreV1API_listNamespacedPod(apiClient,
-                                           s.data(), /*namespace */
-                                           nullptr,  /* pretty */
-                                           0,        /* allowWatchBookmarks */
-                                           nullptr,  /* continue */
-                                           nullptr,  /* fieldSelector */
-                                           nullptr,  /* labelSelector */
-                                           0,        /* limit */
-                                           nullptr,  /* resourceVersion */
-                                           nullptr,  /* resourceVersionMatch */
-                                           0,        /* sendInitialEvents */
-                                           0,        /* timeoutSeconds */
-                                           0         /* watch */
+                                           query_namespace.data(), /*namespace */
+                                           nullptr,                /* pretty */
+                                           0,                      /* allowWatchBookmarks */
+                                           nullptr,                /* continue */
+                                           nullptr,                /* fieldSelector */
+                                           nullptr,                /* labelSelector */
+                                           0,                      /* limit */
+                                           nullptr,                /* resourceVersion */
+                                           nullptr,                /* resourceVersionMatch */
+                                           0,                      /* sendInitialEvents */
+                                           0,                      /* timeoutSeconds */
+                                           0                       /* watch */
     );
-    cout << "The return code of HTTP request=%ld\n" << apiClient->response_code << endl;
+    cout << "The return code of HTTP request=" << apiClient->response_code << endl;
     if (pod_list) {
         cout << "Get pod list:" << endl;
         listEntry_t *listEntry;
